@@ -1,56 +1,74 @@
-﻿namespace MTCG_Wiktoria.Menu;
-
-public class MenuMain : IMenu
+﻿namespace MTCG_Wiktoria.Menu
 {
-    public void DrawMenu()
+    public class MenuMain : IMenu
     {
-        Console.WriteLine("~~~ Dungeon Fire ~~~/n");
-        Console.WriteLine("/n~~~ Main Menu ~~~ /n");
-        Console.WriteLine("/n You want to Sign up (0) or Log in (1)?/n");
-
-        string userInput = Console.ReadLine();
-
-        while (true)
+        public void DrawMenu()
         {
-            if (userInput == "0")
+            Console.WriteLine("~~~ Dungeon Fire ~~~\n");
+            Console.WriteLine("\n~~~ Main Menu ~~~ \n");
+            Console.WriteLine("\nYou want to Sign up (0) or Log in (1)?\n");
+
+            string userInput = Console.ReadLine();
+
+            while (true)
             {
-                SignUp();
-                //break;
+                if (userInput == "0")
+                {
+                    SignUp();
+                    break;
+                }
+                else if (userInput == "1")
+                {
+                    LogIn();
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Wrong input! Please enter 0 for Sign up or 1 for Log in.");
+                    userInput = Console.ReadLine();
+                }
             }
-            else if (userInput == "1")
+        }
+
+        private void LogIn()
+        {
+            Console.WriteLine("~~~ Log In ~~~");
+            Console.Write("Enter username: ");
+            string username = Console.ReadLine();
+
+            Console.Write("Enter password: ");
+            string password = Console.ReadLine();
+
+            string requestBody = $"{username},{password}";
+            //string response = MTCG_Wiktoria.Server.RequestHandler.PostRequest("/login", requestBody);
+
+            //Console.WriteLine(response);
+        }
+
+        private void SignUp()
+        {
+            Console.WriteLine("~~~ Sign Up ~~~");
+            Console.Write("Enter username: ");
+            string username = Console.ReadLine();
+
+            Console.Write("Enter password: ");
+            string password = Console.ReadLine();
+
+            Console.Write("Enter password again: ");
+            string passwordAgain = Console.ReadLine();
+
+            if (password == passwordAgain && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                //break;
+                string requestBody = $"{username},{password}";
+                //string response = MTCG_Wiktoria.Server.RequestHandler.PostRequest("/signup", requestBody);
+
+                //Console.WriteLine(response);
             }
             else
             {
-                Console.WriteLine("Wrong input!");
+                Console.WriteLine("Passwords do not match or inputs are invalid. Please try again.");
+                SignUp();
             }
         }
-    }
-
-    private void LogIn()
-    {
-    }
-
-    private void SignUp()
-    {
-        Console.WriteLine("~~~ Sign In ~~~");
-        Console.Write("Enter username: ");
-        string username = Console.ReadLine();
-
-        Console.Write("Enter password: ");
-        string password = Console.ReadLine();
-        
-        Console.Write("Enter password again: ");
-        string passwordAgain = Console.ReadLine();
-
-        if (passwordAgain == password && username != "" && password != "" && passwordAgain != "")
-        {
-            new User.User(username, password);
-        }
-
-        //new User implementation
-        
-
     }
 }

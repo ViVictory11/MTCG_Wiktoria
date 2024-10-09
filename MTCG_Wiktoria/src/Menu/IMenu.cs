@@ -2,6 +2,6 @@
 
 public interface IMenu
 {
-    protected void DrawMenu();
+    public void DrawMenu();
 
 }

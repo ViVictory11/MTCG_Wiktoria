@@ -12,6 +12,7 @@ public class User
 
     public string Username { get; private set; }
     public string Password { get; private set; }
+    public string Token { get; set; }
 
     private List<Card> _stack = new();
     private List<Card> _deck = new();

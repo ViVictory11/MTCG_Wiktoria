@@ -40,7 +40,7 @@
             string password = Console.ReadLine();
 
             string requestBody = $"{username},{password}";
-            //string response = MTCG_Wiktoria.Server.RequestHandler.PostRequest("/login", requestBody);
+            //string response = MTCG_Server.Server.RequestHandler.PostRequest("/login", requestBody);
 
             //Console.WriteLine(response);
         }
@@ -60,7 +60,7 @@
             if (password == passwordAgain && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
                 string requestBody = $"{username},{password}";
-                //string response = MTCG_Wiktoria.Server.RequestHandler.PostRequest("/signup", requestBody);
+                //string response = MTCG_Server.Server.RequestHandler.PostRequest("/signup", requestBody);
 
                 //Console.WriteLine(response);
             }

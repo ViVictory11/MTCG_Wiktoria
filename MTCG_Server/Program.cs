@@ -1,6 +1,7 @@
 ﻿using System;
 using MTCG_Wiktoria.Server;
 using MTCG_Wiktoria.Menu;
+using Npgsql;
 
 namespace MTCG_Wiktoria
 {

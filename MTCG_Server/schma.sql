@@ -24,9 +24,10 @@ CREATE TABLE IF NOT EXISTS users (
                                      wins INTEGER DEFAULT 0,
                                      losses INTEGER DEFAULT 0,
                                      profile TEXT DEFAULT '',
+                                     profile_image_url TEXT DEFAULT NULL,
+                                     last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
 
 -- Create Cards Table
 CREATE TABLE IF NOT EXISTS cards (
@@ -34,7 +35,9 @@ CREATE TABLE IF NOT EXISTS cards (
                                      name TEXT UNIQUE NOT NULL,
                                      type TEXT NOT NULL CHECK (type IN ('Monster', 'Spell')),
                                      element TEXT NOT NULL CHECK (element IN ('Fire', 'Water', 'Normal')),
-                                     damage INTEGER NOT NULL
+                                     damage INTEGER NOT NULL,
+                                     rarity TEXT DEFAULT 'common' CHECK (rarity IN ('common', 'rare', 'epic', 'legendary')),
+                                     special_ability TEXT DEFAULT NULL
 );
 
 -- Create User_Cards Table
@@ -52,6 +55,7 @@ CREATE TABLE IF NOT EXISTS decks (
                                      id SERIAL PRIMARY KEY,
                                      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                      card_id INTEGER NOT NULL REFERENCES cards(id) ON DELETE CASCADE,
+                                     deck_name TEXT DEFAULT 'Default Deck',
                                      UNIQUE(user_id, card_id)
 );
 
@@ -62,7 +66,8 @@ CREATE TABLE IF NOT EXISTS trades (
                                       offered_card_id INTEGER NOT NULL REFERENCES user_cards(id) ON DELETE CASCADE,
                                       requirement_type TEXT NOT NULL CHECK (requirement_type IN ('Monster', 'Spell')),
                                       min_damage INTEGER DEFAULT 0,
-                                      accepted BOOLEAN DEFAULT FALSE
+                                      status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'canceled')),
+                                      expires_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '7 days')
 );
 
 -- Create Battles Table
@@ -83,24 +88,26 @@ CREATE TABLE IF NOT EXISTS battle_log (
                                           user1_card_id INTEGER NOT NULL REFERENCES user_cards(id) ON DELETE CASCADE,
                                           user2_card_id INTEGER NOT NULL REFERENCES user_cards(id) ON DELETE CASCADE,
                                           winner_card_id INTEGER REFERENCES user_cards(id),
+                                          user1_card_damage INTEGER,
+                                          user2_card_damage INTEGER,
                                           log_details TEXT NOT NULL
 );
 
 -- Insert Sample Data into Users Table
-INSERT INTO users (username, password, coins) VALUES
-                                                  ('player1', 'password123', 20),
-                                                  ('player2', 'password456', 20),
-                                                  ('player3', 'testpassword', 20)
+INSERT INTO users (username, password, coins, profile) VALUES
+                                                           ('player1', 'password123', 20, 'Player 1 profile info'),
+                                                           ('player2', 'password456', 20, 'Player 2 profile info'),
+                                                           ('player3', 'testpassword', 20, 'Player 3 profile info')
 ON CONFLICT (username) DO NOTHING;
 
 -- Insert Sample Data into Cards Table
-INSERT INTO cards (name, type, element, damage) VALUES
-                                                    ('Dragon', 'Monster', 'Fire', 100),
-                                                    ('Goblin', 'Monster', 'Normal', 30),
-                                                    ('Water Blast', 'Spell', 'Water', 80),
-                                                    ('Fire Ball', 'Spell', 'Fire', 70),
-                                                    ('Kraken', 'Monster', 'Water', 120),
-                                                    ('Wizard', 'Monster', 'Normal', 60)
+INSERT INTO cards (name, type, element, damage, rarity, special_ability) VALUES
+                                                                             ('Dragon', 'Monster', 'Fire', 100, 'epic', NULL),
+                                                                             ('Goblin', 'Monster', 'Normal', 30, 'common', NULL),
+                                                                             ('Water Blast', 'Spell', 'Water', 80, 'rare', NULL),
+                                                                             ('Fire Ball', 'Spell', 'Fire', 70, 'common', NULL),
+                                                                             ('Kraken', 'Monster', 'Water', 120, 'legendary', 'Immune to Spells'),
+                                                                             ('Wizard', 'Monster', 'Normal', 60, 'rare', 'Controls Orks')
 ON CONFLICT (name) DO NOTHING;
 
 -- Insert Sample Data into User_Cards Table
@@ -114,8 +121,9 @@ INSERT INTO user_cards (user_id, card_id, in_deck) VALUES
 ON CONFLICT DO NOTHING;
 
 -- Insert Sample Data into Trades Table
-INSERT INTO trades (user_id, offered_card_id, requirement_type, min_damage) VALUES
-    (1, 5, 'Spell', 70) -- player1 offers Kraken and requires a Spell with damage >= 70
+INSERT INTO trades (user_id, offered_card_id, requirement_type, min_damage, status) VALUES
+                                                                                        (1, 5, 'Spell', 70, 'pending'),
+                                                                                        (2, 2, 'Monster', 50, 'completed')
 ON CONFLICT DO NOTHING;
 
 -- Insert Sample Data into Battles Table
@@ -125,14 +133,25 @@ INSERT INTO battles (user1_id, user2_id, winner_id, rounds_played) VALUES
 ON CONFLICT DO NOTHING;
 
 -- Insert Sample Data into Battle_Log Table
-INSERT INTO battle_log (battle_id, round_number, user1_card_id, user2_card_id, winner_card_id, log_details) VALUES
-                                                                                                                (1, 1, 1, 2, 1, 'Round 1: Dragon vs Goblin, Dragon wins with 100 damage.'),
-                                                                                                                (1, 2, 3, 4, 4, 'Round 2: Water Blast vs Fire Ball, Fire Ball wins with 70 damage.'),
-                                                                                                                (1, 3, 1, 2, 1, 'Round 3: Dragon vs Goblin, Dragon wins with 100 damage.'),
-                                                                                                                (2, 1, 4, 6, 4, 'Round 1: Fire Ball vs Wizard, Fire Ball wins with 70 damage.')
+INSERT INTO battle_log (battle_id, round_number, user1_card_id, user2_card_id, winner_card_id, user1_card_damage, user2_card_damage, log_details) VALUES
+                                                                                                                                                      (1, 1, 1, 2, 1, 100, 30, 'Round 1: Dragon vs Goblin, Dragon wins with 100 damage.'),
+                                                                                                                                                      (1, 2, 3, 4, 4, 80, 70, 'Round 2: Water Blast vs Fire Ball, Fire Ball wins with 70 damage.'),
+                                                                                                                                                      (1, 3, 1, 2, 1, 100, 30, 'Round 3: Dragon vs Goblin, Dragon wins with 100 damage.'),
+                                                                                                                                                      (2, 1, 4, 6, 4, 70, 60, 'Round 1: Fire Ball vs Wizard, Fire Ball wins with 70 damage.')
 ON CONFLICT DO NOTHING;
 
+-- Verify Tables
 \d users
-SELECT * FROM users;
 \d cards
+\d user_cards
+\d trades
+\d battles
+\d battle_log
+
+-- Verify Data
+SELECT * FROM users;
 SELECT * FROM cards;
+SELECT * FROM user_cards;
+SELECT * FROM trades;
+SELECT * FROM battles;
+SELECT * FROM battle_log;

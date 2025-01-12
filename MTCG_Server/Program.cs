@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MTCG_Wiktoria.Server;
 using MTCG_Wiktoria.Menu;
-using Npgsql;
 
 namespace MTCG_Wiktoria
 {
@@ -9,19 +9,26 @@ namespace MTCG_Wiktoria
     {
         private static IMenu _currentMenu;
 
-        public static void Main()
+        public static async Task Main()
         {
-            RunTests();
-
             _currentMenu = new MenuMain();
-            new Server.Server().Start();
-            _currentMenu.DrawMenu();
+
+            Task serverTask = Task.Run(() =>
+            {
+                new Server.Server().Start();
+            });
+
+            await RunMenuAsync();
+
+            await serverTask;
         }
 
-        private static void RunTests()
+        private static Task RunMenuAsync()
         {
-            var tests = new RequestHandlerTests();
-            tests.RunAllTests();
+            return Task.Run(() =>
+            {
+                _currentMenu.DrawMenu();
+            });
         }
     }
 }

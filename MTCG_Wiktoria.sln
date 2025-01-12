@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCG_Server", "MTCG_Server\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTCG_Wiktoria.Test", "MTCG_Wiktoria.Test\MTCG_Wiktoria.Test.csproj", "{223DCC5C-9C72-4AC4-BE2F-AE058F33AFB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{FC3E2967-6E6E-4D22-A7A0-77304595B579}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +18,5 @@ Global
 		{223DCC5C-9C72-4AC4-BE2F-AE058F33AFB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{223DCC5C-9C72-4AC4-BE2F-AE058F33AFB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{223DCC5C-9C72-4AC4-BE2F-AE058F33AFB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC3E2967-6E6E-4D22-A7A0-77304595B579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC3E2967-6E6E-4D22-A7A0-77304595B579}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC3E2967-6E6E-4D22-A7A0-77304595B579}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC3E2967-6E6E-4D22-A7A0-77304595B579}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

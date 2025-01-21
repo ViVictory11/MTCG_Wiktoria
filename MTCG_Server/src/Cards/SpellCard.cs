@@ -40,5 +40,9 @@
             // Neutral effectiveness
             return Damage;
         }*/
+        public override int CalculateDamage(Card opponent)
+        {
+            
+        }
     }
 }

@@ -8,6 +8,8 @@ public abstract class Card
         Element = element;
         Damage = damage;
     }
+    
+    public abstract int CalculateDamage(Card opponent);
 
     public string Name{ get; private set; }
     public Element Element { get; private set; }

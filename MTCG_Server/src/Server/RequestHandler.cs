@@ -11,11 +11,7 @@ namespace MTCG_Wiktoria.Server
     {
         private static List<Card> _cards = new()
         {
-            new Dragon("Dragon", Element.FIRE, 100),
-            new Goblin("Goblin", Element.NORMAL, 50),
-            new Knight("Knight", Element.EARTH, 60),
-            new Kraken("Kraken", Element.WATER, 90),
-            new FireElf("FireElf", Element.FIRE, 40),
+           
             new MonsterCard("ThunderWolf", Element.LIGHTNING, 70),
             new MonsterCard("EarthGolem", Element.EARTH, 80),
             new MonsterCard("StormPhoenix", Element.LIGHTNING, 95),
